@@ -1,0 +1,48 @@
+{% extends "layout/base.html" %}
+{% block title %}Suppliers{% endblock %}
+
+{% block content %}
+<h2>Suppliers</h2>
+
+<div class="card">
+    <form method="get" action="/ui/suppliers">
+        <input name="search" placeholder="Search supplier..." value="{{ search or '' }}">
+        <button class="btn-secondary">Search</button>
+    </form>
+
+    <form method="post" action="/ui/suppliers/add" style="margin-top:15px;">
+        <input name="name" placeholder="New supplier name" required>
+        <button class="btn-primary">Add Supplier</button>
+    </form>
+</div>
+
+<div class="card">
+<table>
+<thead>
+<tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Actions</th>
+</tr>
+</thead>
+<tbody>
+{% for s in suppliers %}
+<tr>
+    <td>{{ s.id }}</td>
+    <td>
+        <form method="post" action="/ui/suppliers/update/{{ s.id }}" style="display:flex; gap:6px;">
+            <input name="name" value="{{ s.name }}" required>
+            <button class="btn-secondary">Update</button>
+        </form>
+    </td>
+    <td>
+        <form method="post" action="/ui/suppliers/delete/{{ s.id }}">
+            <button class="btn-danger">Delete</button>
+        </form>
+    </td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+{% endblock %}

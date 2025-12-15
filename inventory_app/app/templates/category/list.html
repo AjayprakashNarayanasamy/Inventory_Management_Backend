@@ -1,0 +1,70 @@
+{% extends "layout/base.html" %}
+{% block title %}Categories{% endblock %}
+
+{% block content %}
+
+<h2>Categories</h2>
+
+<div class="card">
+    <!-- Search -->
+    <form method="get" action="/ui/categories" style="margin-bottom:15px;">
+        <input
+            type="text"
+            name="search"
+            placeholder="Search category..."
+            value="{{ search or '' }}"
+        />
+        <button class="btn-secondary">Search</button>
+    </form>
+
+    <!-- Add Category -->
+    <form method="post" action="/ui/categories/add" style="margin-bottom:20px;">
+        <input
+            type="text"
+            name="name"
+            placeholder="New category name"
+            required
+        />
+        <button class="btn-primary">Add Category</button>
+    </form>
+</div>
+
+<div class="card">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th width="180">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in categories %}
+            <tr>
+                <td>{{ c.id }}</td>
+                <td>
+                    <form
+                        method="post"
+                        action="/ui/categories/update/{{ c.id }}"
+                        style="display:flex; gap:6px;"
+                    >
+                        <input type="text" name="name" value="{{ c.name }}" required />
+                        <button class="btn-secondary">Update</button>
+                    </form>
+                </td>
+                <td>
+                    <form
+                        method="post"
+                        action="/ui/categories/delete/{{ c.id }}"
+                        onsubmit="return confirm('Delete this category?');"
+                    >
+                        <button class="btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

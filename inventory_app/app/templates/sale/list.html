@@ -1,0 +1,80 @@
+{% extends "layout/base.html" %}
+{% block title %}Sales{% endblock %}
+
+{% block content %}
+<h2>Sales</h2>
+
+<!-- ADD SALE -->
+<div class="card">
+<form method="post" action="/ui/sales/add">
+    <select name="product_id" required>
+        {% for p in products %}
+        <option value="{{ p.id }}">{{ p.name }}</option>
+        {% endfor %}
+    </select>
+
+    <input type="number"
+           name="quantity_sold"
+           min="1"
+           placeholder="Quantity Sold"
+           required>
+
+    <button class="btn-primary">Add Sale</button>
+</form>
+</div>
+
+<!-- SALES TABLE -->
+<div class="card">
+<table>
+<thead>
+<tr>
+    <th>ID</th>
+    <th>Product</th>
+    <th>Price</th>
+    <th>Quantity</th>
+    <th>Total</th>
+    <th>Date</th>
+    <th>Actions</th>
+</tr>
+</thead>
+
+<tbody>
+{% for s in sales %}
+<tr>
+<form method="post" action="/ui/sales/update/{{ s.id }}">
+
+    <!-- REQUIRED -->
+    <input type="hidden" name="product_id" value="{{ s.product_id }}">
+
+    <td>{{ s.id }}</td>
+    <td>{{ s.product_name }}</td>
+    <td>₹ {{ s.product_price }}</td>
+
+    <td>
+        <input type="number"
+               name="quantity_sold"
+               value="{{ s.quantity_sold }}"
+               min="1"
+               required>
+    </td>
+
+    <td>₹ {{ s.product_price * s.quantity_sold }}</td>
+    <td>{{ s.created_at }}</td>
+
+    <td style="display:flex; gap:6px;">
+        <button class="btn-secondary">Update</button>
+</form>
+
+        <form method="post"
+              action="/ui/sales/delete/{{ s.id }}"
+              onsubmit="return confirm('Delete this sale?');">
+            <button class="btn-danger">Delete</button>
+        </form>
+    </td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+
+{% endblock %}

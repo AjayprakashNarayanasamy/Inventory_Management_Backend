@@ -1,0 +1,135 @@
+{% extends "layout/base.html" %}
+{% block title %}Products{% endblock %}
+
+{% block content %}
+<h2>Products</h2>
+
+<!-- 🔍 SEARCH + FILTER -->
+<form method="get" action="/ui/products" class="filter-bar">
+
+    <input
+        type="text"
+        name="search"
+        placeholder="Search name or SKU"
+        value="{{ search or '' }}"
+    />
+
+    <select name="category_id" required>
+        <option value="">All Categories</option>
+        {% for c in categories %}
+        <option value="{{ c.id }}"
+            {% if category_id == c.id %}selected{% endif %}
+        >
+            {{ c.name }}
+        </option>
+        {% endfor %}
+    </select>
+
+    <select name="supplier_id" required>
+        <option value="">All Suppliers</option>
+        {% for s in suppliers %}
+        <option value="{{ s.id }}"
+            {% if supplier_id == s.id %}selected{% endif %}
+        >
+            {{ s.name }}
+        </option>
+        {% endfor %}
+    </select>
+
+    <button type="submit" class="btn-primary">Filter</button>
+</form>
+
+<!-- ➕ ADD PRODUCT -->
+<div class="card">
+<form method="post" action="/ui/products/add">
+    <input name="name" placeholder="Name" required>
+    <input name="sku" placeholder="SKU" required>
+    <input name="price" type="number" required>
+    <input name="quantity" type="number" required>
+
+    <select name="category_id" required>
+        {% for c in categories %}
+        <option value="{{ c.id }}">{{ c.name }}</option>
+        {% endfor %}
+    </select>
+
+    <select name="supplier_id" required>
+        {% for s in suppliers %}
+        <option value="{{ s.id }}">{{ s.name }}</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit" class="btn-primary">Add Product</button>
+</form>
+</div>
+
+<!-- 📋 PRODUCT TABLE -->
+<div class="card">
+<table>
+<thead>
+<tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>SKU</th>
+    <th>Category</th>
+    <th>Supplier</th>
+    <th>Price</th>
+    <th>Quantity</th>
+    <th>Actions</th>
+</tr>
+</thead>
+
+<tbody>
+{% for p in products %}
+<tr>
+    <!-- UPDATE FORM (INSIDE TD – VALID) -->
+    <form method="post" action="/ui/products/update/{{ p.id }}">
+        <td>{{ p.id }}</td>
+
+        <td><input name="name" value="{{ p.name }}" required></td>
+        <td><input name="sku" value="{{ p.sku }}" required></td>
+
+        <td>
+            <select name="category_id">
+                {% for c in categories %}
+                <option value="{{ c.id }}"
+                    {% if c.id == p.category_id %}selected{% endif %}
+                >
+                    {{ c.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </td>
+
+        <td>
+            <select name="supplier_id">
+                {% for s in suppliers %}
+                <option value="{{ s.id }}"
+                    {% if s.id == p.supplier_id %}selected{% endif %}
+                >
+                    {{ s.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </td>
+
+        <td><input name="price" type="number" value="{{ p.price }}" required></td>
+        <td><input name="quantity" type="number" value="{{ p.quantity }}" required></td>
+
+        <td style="display:flex; gap:6px;">
+            <button type="submit" class="btn-secondary">Update</button>
+    </form>
+
+            <!-- DELETE FORM (SEPARATE) -->
+            <form method="post" action="/ui/products/delete/{{ p.id }}"
+                  onsubmit="return confirm('Delete this product?');">
+                <button type="submit" class="btn-danger">Delete</button>
+            </form>
+        </td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+
+{% endblock %}

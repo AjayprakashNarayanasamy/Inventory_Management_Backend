@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Inventory Admin{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <h2>📦 Inventory</h2>
+
+    <nav>
+        <a href="/ui/categories">Categories</a>
+        <a href="/ui/suppliers">Suppliers</a>
+        <a href="/ui/products">Products</a>
+        <a href="/ui/sales">Sales</a>
+    </nav>
+
+    <a href="/ui/logout" class="logout-btn">Logout</a>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+    <div class="navbar">
+        <span class="navbar-title">Admin Dashboard</span>
+    </div>
+
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+</div>
+
+</body>
+</html>
